@@ -1,0 +1,33 @@
+# ---- Rust ----
+/target
+**/*.rs.bk
+*.pdb
+*.rlib
+*.rmeta
+
+# ---- Android / Gradle（若放在本仓）----
+.gradle/
+build/
+*.apk
+*.aab
+*.ap_
+*.dex
+*.keystore
+*.jks
+local.properties
+
+# ---- 本地/私有工具链路径（含本机绝对路径，不入库）----
+.cargo/config.toml
+*.rsp
+
+# ---- 运行期产物 ----
+*.pcm
+*.tmp
+
+# ---- 编辑器 / 系统 ----
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+desktop.ini
