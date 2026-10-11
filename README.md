@@ -1,4 +1,4 @@
-﻿# Phira Legacy Android Port
+# Phira Legacy Android Port
 
 ![Phira](https://phira.5wyxi.com/files/github-showcase.png)
 
@@ -32,10 +32,34 @@ I:\Other\sasa-main
 
 主机环境：**Windows 7**。Rust使用**1.87 GNU**，NDK使用**r26d的clang/lld**编译、**r10e的sysroot/CRT/libc**链接，C依赖使用`L:\Software\w64devkit`编译。
 
-千万不要用Windows 7编译Rust 1.87，否则你会先吃饱VxKex（
+还是建议千万不要用Windows 7编译Rust 1.87，否则你会先吃饱VxKex（
 
 `.cargo/config.toml`中包含各目标的linker/rustflags（**含本机绝对路径，换机需自行修改**）。
 
+示例（PowerShell）：
+
+```powershell
+$NewNdk='I:\Other\android-ndk-r26d'; $OldNdk='L:\Other\android-ndk-r10e'
+$Clang="$NewNdk\toolchains\llvm\prebuilt\windows-x86_64\bin\clang.exe"
+$LlvmAr="$NewNdk\toolchains\llvm\prebuilt\windows-x86_64\bin\llvm-ar.exe"
+$RustBin='L:\Program Files\Rust stable GNU 1.87\bin'; $W64='L:\Software\w64devkit\bin'
+$env:PATH="$W64;$RustBin;$env:PATH"
+
+# armeabi-v7a
+$env:CC_armv7_linux_androideabi=$Clang; $env:AR_armv7_linux_androideabi=$LlvmAr
+$env:CFLAGS_armv7_linux_androideabi="--target=armv7a-linux-androideabi8 --sysroot=$OldNdk\platforms\android-8\arch-arm -DSIZE_MAX=((size_t)-1)"
+cargo build -p phira --no-default-features --release --target armv7-linux-androideabi
+
+# armeabi（ARMv6 + VFPv2，针对MSM7227）
+# 见.cargo/config.toml的+v6,+vfp2,+d16/target-cpu=arm1136jf-s
+$env:CC_arm_linux_androideabi=$Clang; $env:AR_arm_linux_androideabi=$LlvmAr
+$env:CFLAGS_arm_linux_androideabi="--target=arm-linux-androideabi8 -march=armv6 -mfpu=vfp -mfloat-abi=softfp --sysroot=$OldNdk\platforms\android-8\arch-arm -DSIZE_MAX=((size_t)-1)"
+cargo build -p phira --no-default-features --release --target arm-linux-androideabi
+
+# x86
+$env:CC_i686_linux_android=$Clang; $env:AR_i686_linux_android=$LlvmAr
+$env:CFLAGS_i686_linux_android="--target=i686-linux-android9 --sysroot=$OldNdk\platforms\android-9\arch-x86 -DSIZE_MAX=((size_t)-1)"
+cargo build -p phira --no-default-features --release --target i686-linux-android
 ```
 
 编译完成后，将`target/<triple>/release/libphira.so`拷贝到`Phira-port/app/src/main/jniLibs/{armeabi-v7a,armeabi,x86}/`，然后使用Gradle打包。
