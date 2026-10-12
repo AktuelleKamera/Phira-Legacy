@@ -4,12 +4,12 @@
 
 > 将[Phira](https://github.com/TeamFlos/phira)（Rust + macroquad/miniquad）移植到**清朝安卓设备**，最低支持Android 2.0（minSdk 5），适用于ARMv5/VFPv2的MSM7227等早期SoC。本移植目前支持armeabi-vfp, armeabi-v7a, x86。
 
-## 推荐配置
+## 配置要求
 
 - **最低**：单核ARMv6（VFPv2），`512MB`内存，Android 2.0
 - **推荐**：`MSM8260`/`S5PC110`等双核设备，`768MB`内存及以上，Android 2.2+
 - **GPU**：支持OpenGL ES 2.0（Adreno 205 / PowerVR SGX540等）
-- **存储**：约`200MB`可用空间（推荐`500MB`以上）
+- **存储**：约`50MB`可用空间（推荐`300MB`以上）
 
 > 极老单核设备（如HTC Tattoo、纯ARMv5无VFP）请使用`no-VFP`版本，详见下文。
 
